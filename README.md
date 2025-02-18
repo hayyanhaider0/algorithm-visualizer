@@ -1,4 +1,3 @@
-````
 # Algorithm Visualizer
 
 A web-based **Algorithm Visualizer** built with **React**, **Spring Boot**, and **Tailwind CSS**, featuring **Framer Motion** for animations. The application provides interactive algorithm visualizations and is powered by a backend that manages operations such as insertion, deletion, and searching.
@@ -23,10 +22,11 @@ A web-based **Algorithm Visualizer** built with **React**, **Spring Boot**, and 
 ### Frontend
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/hayyanhaider0/algorithm-visualizer.git
    cd algorithm-visualizer
-````
+   ```
 
 2. Navigate to the frontend folder:
    ```bash
