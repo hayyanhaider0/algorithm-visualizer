@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-primary font-mono text-accent;
+  }
+}
+
+@layer components {
+  h1 {
+    @apply text-4xl font-extrabold;
+  }
+
+  h2 {
+    @apply text-2xl font-bold md:text-2xl;
+  }
+
+  h3 {
+    @apply text-xl font-bold md:text-2xl;
+  }
+
+  h4 {
+    @apply text-lg underline md:text-xl;
+  }
+
+  input {
+    @apply rounded-lg p-2;
+  }
+
+  button {
+    @apply rounded-lg border-2 bg-primary p-2 transition-colors duration-100;
+  }
+
+  button:hover {
+    @apply border-secondary text-secondary;
+  }
+
+  hr {
+    @apply border-2 border-zinc-950;
+  }
+
+  .gridded-background {
+    @apply bg-background bg-grid bg-grid-size bg-center;
+  }
+
+  .custom-scrollbar {
+    @apply max-h-[calc(100vh-13rem)] overflow-auto;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    @apply h-1 w-1;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-none;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-secondary bg-opacity-20;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-opacity-100;
+  }
+
+  input {
+    @apply placeholder:text-slate-600;
+  }
+
+  .code-selector {
+    @apply rounded-b-none rounded-t-lg bg-[#181A1C] font-bold hover:bg-[#1D1F21];
+  }
+
+  /* Add this CSS to your global stylesheet */
+  .tree-node {
+    position: relative;
+    margin: 20px 0;
+  }
+
+  .tree-node::before {
+    content: "";
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    border-top: 2px solid white;
+    width: 100%;
+  }
+
+  .tree-node::after {
+    content: "";
+    position: absolute;
+    top: -20px;
+    left: -50%;
+    border-left: 2px solid white;
+    height: 20px;
+  }
+
+  .tree-node:first-child::after {
+    border: 0;
+  }
+
+  .tree-node:only-child::after,
+  .tree-node:only-child::before {
+    display: none;
+  }
+}
