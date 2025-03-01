@@ -5,7 +5,7 @@ import Input from "../../components/common/Input";
 import Output from "../../components/common/Output";
 import { snippets } from "../../data/snippets";
 import descriptions from "../../data/descriptions";
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import {
   INITIAL_STATE,
   ACTIONS,
@@ -16,6 +16,21 @@ const QUEUE_API = `${import.meta.env.VITE_API}/queue`;
 
 const Queue = () => {
   const [state, dispatch] = useReducer(queueReducer, INITIAL_STATE);
+
+  const fetchUpdatedQueue = async () => {
+    try {
+      const response = await fetch(`${LINKED_LIST_API}/queue`);
+      if (!response.ok) throw new Error("Failed to fetch queue");
+      const updatedList = await response.json();
+      dispatch({ type: ACTIONS.UPDATE_QUEUE, payload: updatedQueue });
+    } catch (error) {
+      console.error("Error fetching queue:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUpdatedQueue();
+  }, []);
 
   const handleActions = async (actionType, payload) => {
     let url = QUEUE_API;

@@ -5,7 +5,7 @@ import Input from "../../components/common/Input";
 import Output from "../../components/common/Output";
 import { snippets } from "../../data/snippets";
 import descriptions from "../../data/descriptions";
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import {
   linkedListReducer,
   INITIAL_STATE,
@@ -16,6 +16,21 @@ const LINKED_LIST_API = `${import.meta.env.VITE_API}/linked-list`;
 
 const LinkedList = () => {
   const [state, dispatch] = useReducer(linkedListReducer, INITIAL_STATE);
+
+  const fetchUpdatedList = async () => {
+    try {
+      const response = await fetch(`${LINKED_LIST_API}/list`);
+      if (!response.ok) throw new Error("Failed to fetch list");
+      const updatedList = await response.json();
+      dispatch({ type: ACTIONS.UPDATE_LIST, payload: updatedList });
+    } catch (error) {
+      console.error("Error fetching linked list:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUpdatedList();
+  }, []);
 
   const handleActions = async (actionType, payload) => {
     let url = LINKED_LIST_API;

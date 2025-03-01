@@ -5,7 +5,7 @@ import Input from "../../components/common/Input";
 import Output from "../../components/common/Output";
 import { snippets } from "../../data/snippets";
 import descriptions from "../../data/descriptions";
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import {
   INITIAL_STATE,
   ACTIONS,
@@ -16,6 +16,21 @@ const STACK_API = `${import.meta.env.VITE_API}/stack`;
 
 const Stack = () => {
   const [state, dispatch] = useReducer(stackReducer, INITIAL_STATE);
+
+  const fetchUpdatedStack = async () => {
+    try {
+      const response = await fetch(`${LINKED_LIST_API}/stack`);
+      if (!response.ok) throw new Error("Failed to fetch stack");
+      const updatedList = await response.json();
+      dispatch({ type: ACTIONS.UPDATE_STACK, payload: updatedStack });
+    } catch (error) {
+      console.error("Error fetching stack:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUpdatedStack();
+  }, []);
 
   const handleActions = async (actionType, payload) => {
     let url = STACK_API;
