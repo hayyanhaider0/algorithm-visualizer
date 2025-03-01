@@ -1,13 +1,23 @@
 package com.example.backend.model;
 
-public class Node {
-    public int id;
-    public String data;
-    public Node next;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public Node(String data) {
-        this.id = id++;
-        this.data = data;
-        this.next = null;
+import lombok.Data;
+
+@Data
+public class Node {
+    @JsonProperty("id")
+    private int id;
+
+    @JsonProperty("value")
+    private String value;
+
+    @JsonProperty("nextId")
+    private int nextId;
+
+    public Node(int id, String value, int nextId) {
+        this.id = id;
+        this.value = value;
+        this.nextId = nextId;
     }
 }

@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,24 +14,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.model.Node;
 import com.example.backend.model.SearchResult;
-import com.example.backend.service.LinkedListService;
+import com.example.backend.service.StackService;
 
 @RestController
-@RequestMapping("api/linked-list")
+@RequestMapping("api/stack")
 @CrossOrigin(origins = "http://localhost:5173")
-public class LinkedListController {
-    private final LinkedListService linkedListService = new LinkedListService();
+public class StackController {
+    private final StackService stackService = new StackService();
 
     @PostMapping("/insert")
-    public ResponseEntity<?> insert(@RequestParam String value) {
-        linkedListService.insert(value);
-        Node[] updatedList = linkedListService.getList();
-        return ResponseEntity.ok(updatedList);
+    public ResponseEntity<?> push(@RequestParam String value) {
+        stackService.push(value);
+        Node[] updatedStack = stackService.getStack();
+        return ResponseEntity.ok(updatedStack);
     }
 
     @GetMapping("/search")
     public ResponseEntity<?> search(@RequestParam String value) {
-        SearchResult result = linkedListService.search(value);
+        SearchResult result = stackService.search(value);
         if (result == null) {
             Map<String, String> response = new HashMap<>();
             response.put("error", "Node with value " + value + " not found");
@@ -42,51 +41,53 @@ public class LinkedListController {
         return ResponseEntity.ok(result);
     }
 
-    @DeleteMapping("/delete/{value}")
-    public ResponseEntity<?> delete(@PathVariable String value) {
-        // Call the delete method from your service layer
-        boolean deleted = linkedListService.delete(value);
-
-        if (!deleted) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> pop() {
+        String result = stackService.pop();
+        if (result == null) {
             Map<String, String> response = new HashMap<>();
-            response.put("error", "Node with value " + value + " not found");
+            response.put("error", "Stack is empty");
             return ResponseEntity.ok(response);
         }
 
-        Node[] updatedList = linkedListService.getList();
+        Node[] updatedStack = stackService.getStack();
+        Map<Object, Object> response = new HashMap<>();
+        response.put("deleteResult", result);
+        response.put("stack", updatedStack);
 
-        return ResponseEntity.ok(updatedList);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/peek")
     public ResponseEntity<?> peek() {
-        Node result = linkedListService.peek();
-
+        String result = stackService.peek();
         if (result == null) {
             Map<String, String> response = new HashMap<>();
-            response.put("error", "Linked list is empty");
+            response.put("error", "Stack is empty");
             return ResponseEntity.ok(response);
         }
+
+        getStack();
 
         return ResponseEntity.ok(result);
     }
 
     @DeleteMapping("/clear")
     public ResponseEntity<?> clear() {
-        boolean result = linkedListService.clear();
-
+        boolean result = stackService.clear();
         if (!result) {
-            Map<String, String> response = new HashMap<>();
-            response.put("error", "Linked list is empty");
+            HashMap<String, String> response = new HashMap<>();
+            response.put("error", "Stack is Empty");
             return ResponseEntity.ok(response);
         }
 
-        Node[] updatedList = {};
-        return ResponseEntity.ok(updatedList);
+        Node[] updatedStack = stackService.getStack();
+
+        return ResponseEntity.ok(updatedStack);
     }
 
-    @GetMapping("/list")
-    public Node[] getList() {
-        return linkedListService.getList();
+    @GetMapping("/stack")
+    public Node[] getStack() {
+        return stackService.getStack();
     }
 }

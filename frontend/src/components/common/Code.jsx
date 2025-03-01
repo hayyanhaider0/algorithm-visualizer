@@ -7,8 +7,9 @@ const Code = ({ snippets }) => {
 
   return (
     <section className="w-screen lg:w-auto">
-      <div className="bg-primary py-4 text-center">
+      <div className="relative bg-primary py-4 text-center">
         <h2>Code</h2>
+        <div className="bg-shadow absolute -top-1/4 left-0 z-10 h-10 w-full -scale-y-100 lg:hidden" />
       </div>
 
       {/* Tab buttons to select code snippets */}

@@ -1,42 +1,60 @@
 import { useState, useRef } from "react";
 
-const Input = ({ dispatch, btn1Text, btn2Text, btn3Text, btn4Text }) => {
+const Input = ({
+  btn1Text,
+  btn2Text,
+  btn3Text,
+  btn4Text,
+  handleActions,
+  ACTIONS,
+}) => {
   const [inputValue, setInputValue] = useState("");
+  const [error, setError] = useState(false);
   const inputRef = useRef(null);
 
   const handleAdd = (e) => {
     e.preventDefault();
+
     if (inputValue) {
+      handleActions(ACTIONS.ADD, inputValue);
       setInputValue("");
-      dispatch({ type: "ADD", payload: inputValue });
+    } else {
+      setError(true);
     }
   };
 
   const handleSearch = () => {
     if (inputValue) {
-      dispatch({ type: "SEARCH", payload: inputValue });
+      handleActions(ACTIONS.SEARCH, inputValue);
       setInputValue("");
+    } else {
+      setError(true);
     }
-  };
-
-  const handlePeek = () => {
-    dispatch({ type: "PEEK" });
   };
 
   const handleDelete = (e) => {
     e.preventDefault();
     if (inputValue) {
+      handleActions(ACTIONS.DELETE, inputValue);
       setInputValue("");
-      dispatch({ type: "DELETE", payload: inputValue });
+    } else {
+      setError(true);
     }
   };
 
+  const handlePeek = () => {
+    handleActions(ACTIONS.PEEK);
+    setError(false);
+  };
+
   const handlePop = () => {
-    dispatch({ type: "DELETE" });
+    handleActions(ACTIONS.DELETE);
+    setError(false);
   };
 
   const handleClear = () => {
-    dispatch({ type: "CLEAR" });
+    handleActions(ACTIONS.CLEAR);
+    setError(false);
   };
 
   return (
@@ -51,11 +69,14 @@ const Input = ({ dispatch, btn1Text, btn2Text, btn3Text, btn4Text }) => {
           ref={inputRef}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          placeholder="Enter data..."
-          className="col-span-3 text-primary"
+          onClick={() => setError(false)}
+          placeholder={error ? "Invalid input!" : "Enter data..."}
+          className={`col-span-2 border-4 text-primary sm:col-span-3 ${error ? "border-red-600 placeholder:text-red-600" : "border-transparent"}`}
         />
         {/* Add button */}
-        <button type="submit">{btn1Text}</button>
+        <button type="submit" className="col-span-2 sm:col-span-1">
+          {btn1Text}
+        </button>
 
         {/* Search button */}
         <button
@@ -70,7 +91,7 @@ const Input = ({ dispatch, btn1Text, btn2Text, btn3Text, btn4Text }) => {
         <button
           type="button"
           onClick={(e) => {
-            if (inputValue) {
+            if (btn3Text === "Delete") {
               handleDelete(e);
             } else {
               handlePop();

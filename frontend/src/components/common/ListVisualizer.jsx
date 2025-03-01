@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 
 const ListVisualizer = ({ type, structure }) => {
+  if (!structure) structure = [];
   return (
     <div className="gridded-background h-36 items-center justify-center">
       <div className="custom-scrollbar flex h-full w-full items-center gap-1 overflow-x-scroll px-8">
@@ -11,7 +12,7 @@ const ListVisualizer = ({ type, structure }) => {
           />
         )}
         {/* Animated Node Structure */}
-        {type === "stack" && <line title="Bottom" className="h-24 border-2" />}
+        {type === "stack" && <div title="Bottom" className="h-24 border-2" />}
         <AnimatePresence>
           {structure.map((node, index) => (
             <motion.div

@@ -1,76 +1,87 @@
 package com.example.backend.service;
 
 import com.example.backend.model.Node;
+import com.example.backend.model.SearchResult;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 @Service
 public class LinkedListService {
-    private Node head = null;
-    private Node tail = null;
+    private List<Node> linkedList = new ArrayList<>();
+    private int id = 0;
 
-    public void insert(String data) {
-        Node newNode = new Node(data);
+    public void insert(String value) {
+        Node newNode = new Node(id++, value, -1);
 
-        if (head == null) {
-            head = newNode;
-            tail = newNode;
+        if (linkedList.isEmpty()) {
+            linkedList.add(newNode);
         } else {
-            tail.next = newNode;
-            tail = tail.next;
+            Node previousNode = linkedList.get(linkedList.size() - 1);
+            previousNode.setNextId(newNode.getId());
+            linkedList.add(newNode);
         }
     }
 
-    public Node search(String data) {
-        if (head == null)
+    public SearchResult search(String value) {
+        if (linkedList.isEmpty())
             return null;
 
-        Node current = head;
+        for (int i = 0; i < linkedList.size(); i++) {
+            Node node = linkedList.get(i);
 
-        while (current != null) {
-            if (current.data.equals(data)) {
-                return current;
+            if (node.getValue().equals(value)) {
+                return new SearchResult(node.getValue(), i);
             }
-
-            current = current.next;
         }
 
         return null;
     }
 
-    public boolean delete(String data) {
-        if (head == null)
+    public boolean delete(String value) {
+        if (linkedList.isEmpty())
             return false;
 
-        Node current = head;
-        Node previous = null;
+        for (int i = 0; i < linkedList.size(); i++) {
+            Node node = linkedList.get(i);
 
-        while (current != null) {
-            if (current.data.equals(data)) {
-                if (previous == null) {
-                    head = current.next;
-                    if (head == null)
-                        tail = null;
-                } else {
-                    previous.next = current.next;
-                    if (current.next == null)
-                        tail = previous;
+            if (node.getValue().equals(value)) {
+                if (i > 0) {
+                    Node previousNode = linkedList.get(i - 1);
+
+                    if (i == linkedList.size() - 1) {
+                        previousNode.setNextId(-1);
+                    } else {
+                        Node nextNode = linkedList.get(i + 1);
+                        previousNode.setNextId(nextNode.getId());
+                    }
                 }
+
+                linkedList.remove(node);
                 return true;
             }
-
-            previous = current;
-            current = current.next;
         }
 
         return false;
     }
 
-    public String peek() {
-        return head.data;
+    public Node peek() {
+        if (linkedList.isEmpty())
+            return null;
+        return linkedList.get(0);
     }
 
-    public void clear() {
-        head = null;
-        tail = null;
+    public boolean clear() {
+        if (linkedList.isEmpty())
+            return false;
+        id = 0;
+        linkedList.clear();
+        return true;
+    }
+
+    public Node[] getList() {
+        return linkedList.toArray(new Node[0]);
     }
 }

@@ -8,6 +8,7 @@ const Output = ({
   index2,
   value3,
   index3,
+  error,
 }) => {
   return (
     <section className="flex flex-col bg-zinc-950">
@@ -15,7 +16,7 @@ const Output = ({
         <h2>Output</h2>
       </div>
       <div
-        className={`relative my-auto grid w-full ${heading3 ? "grid-cols-3" : "grid-cols-2"} justify-between py-4 text-center text-secondary`}
+        className={`relative my-auto grid w-full ${heading3 ? "sm:grid-cols-3" : `mi:grid-cols-2 ${error && "mi:grid-cols-3"}`} items-center justify-center gap-4 p-8 text-center text-secondary`}
       >
         {/* Search Result */}
         <div>
@@ -37,6 +38,13 @@ const Output = ({
             <h4>{heading3} Result</h4>
             <p>Value: {value3}</p>
             <p>Index: {index3}</p>
+          </div>
+        )}
+
+        {error && (
+          <div className={`text-red-600 ${heading3 && "sm:col-start-2"}`}>
+            <h4>Error</h4>
+            <p>{error}</p>
           </div>
         )}
       </div>

@@ -1,6 +1,7 @@
 function Footer() {
   return (
-    <footer className="flex flex-col gap-4 bg-primary px-2 py-8 text-center">
+    <footer className="relative flex flex-col gap-4 bg-primary px-2 py-8 text-center">
+      <div className="bg-shadow absolute -top-4 left-0 z-10 hidden h-10 w-full -scale-y-100 lg:block" />
       <p>
         &copy; {new Date().getFullYear()} Algorithm Visualizer by Hayyan Haider
       </p>
