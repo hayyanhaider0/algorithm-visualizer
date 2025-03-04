@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import TreeVisualizer from "../../components/common/TreeVisualizer";
 import Input from "../../components/common/Input";
 import Output from "../../components/common/Output";
@@ -6,85 +6,82 @@ import Description from "../../components/common/Description";
 import Code from "../../components/common/Code";
 import descriptions from "../../data/descriptions";
 import { snippets } from "../../data/snippets";
-import bst from "../../data/AlgorithmClasses/BST";
+import { INITIAL_STATE, ACTIONS, bstReducer } from "../../reducers/bstReducer";
 
-const INITIAL_STATE = {
-  tree: null,
-  searchResult: null,
-  peekResult: null,
-  uniqueId: 1,
-};
-
-const ACTIONS = {
-  ADD: "ADD",
-  SEARCH: "SEARCH",
-  PEEK: "PEEK",
-  DELETE: "DELETE",
-  CLEAR: "CLEAR",
-};
-
-const reducer = (state, action) => {
-  const resetOutput = { searchResult: null, peekResult: null };
-
-  switch (action.type) {
-    case ACTIONS.ADD:
-      let addTree = state.tree;
-
-      if (state.tree === null) {
-        addTree = new bst();
-      }
-
-      addTree.insert(Number(action.payload));
-
-      return {
-        ...state,
-        tree: addTree,
-      };
-    case ACTIONS.SEARCH:
-      const searchResult = state.tree
-        ? state.tree.search(Number(action.payload))
-        : null;
-
-      return {
-        ...state,
-        searchResult: searchResult
-          ? { value: searchResult.value, searchIndex: searchResult.id }
-          : { value: "Not found..." },
-      };
-    case ACTIONS.PEEK:
-      let root = null;
-
-      if (state.tree !== null && state.tree.root !== null) {
-        root = state.tree.root;
-      }
-
-      return {
-        ...state,
-        peekResult: root ? root.value : null,
-      };
-    case ACTIONS.DELETE:
-      let delTree = state.tree;
-
-      delTree.delete(Number(action.payload));
-
-      return {
-        ...state,
-        tree: delTree,
-        ...resetOutput,
-      };
-    case ACTIONS.CLEAR:
-      return {
-        ...state,
-        tree: null,
-        ...resetOutput,
-      };
-    default:
-      return state;
-  }
-};
+const BST_API = `${import.meta.env.VITE_API}/bst`;
 
 const BinarySearchTree = () => {
-  const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const [state, dispatch] = useReducer(bstReducer, INITIAL_STATE);
+
+  const fetchupdatedTree = async () => {
+    try {
+      const response = await fetch(`${BST_API}/list`);
+      if (!response.ok) throw new Error("Failed to fetch list");
+      const updatedTree = await response.json();
+      dispatch({ type: ACTIONS.UPDATE_TREE, payload: updatedTree });
+    } catch (error) {
+      console.error("Error fetching linked list:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchupdatedTree();
+  }, []);
+
+  const handleActions = async (actionType, payload) => {
+    let url = BST_API;
+    let method;
+
+    switch (actionType) {
+      case ACTIONS.ADD:
+        url += `/insert?value=${payload}`;
+        method = "POST";
+        break;
+      case ACTIONS.SEARCH:
+        url += `/search?value=${payload}`;
+        method = "GET";
+        break;
+      case ACTIONS.DELETE:
+        url += `/delete/${payload}`;
+        method = "DELETE";
+        break;
+      case ACTIONS.PEEK:
+        url += `/peek`;
+        method = "GET";
+        break;
+      case ACTIONS.CLEAR:
+        url += `/clear`;
+        method = "DELETE";
+        break;
+      default:
+        return;
+    }
+
+    try {
+      const res = await fetch(url, { method });
+
+      if (!res.ok) {
+        const errorMessage = await res.clone().text();
+        console.error("Error", errorMessage);
+        return;
+      }
+
+      const data = await res.json();
+      console.log(data);
+
+      // After performing the operation, always fetch the updated list
+      const updatedTreeRes = await fetch(`${BST_API}/list`);
+      const updatedTree = await updatedTreeRes.json();
+      console.log(updatedTree);
+
+      if (res.ok) {
+        dispatch({ type: actionType, payload: data });
+        dispatch({ type: ACTIONS.UPDATE_TREE, payload: updatedTree });
+      }
+    } catch (error) {
+      console.error("Error handling linked list operation", error);
+    }
+  };
 
   return (
     <div>
@@ -94,11 +91,12 @@ const BinarySearchTree = () => {
       <TreeVisualizer root={state.tree === null ? null : state.tree.root} />
       <div className="grid lg:grid-cols-2">
         <Input
-          dispatch={dispatch}
           btn1Text="Add"
           btn2Text="Search"
           btn3Text="Delete"
           btn4Text="Peek"
+          handleActions={handleActions}
+          ACTIONS={ACTIONS}
         />
         <Output
           heading1="Search"
@@ -107,6 +105,7 @@ const BinarySearchTree = () => {
           index1={state.searchResult ? state.searchResult.searchIndex : "null"}
           value2={state.peekResult ? state.peekResult : "null"}
           index2={state.peekResult ? "root" : "null"}
+          error={state.error}
         />
         <Description description={descriptions.bst.paragraphs} />
         <Code snippets={snippets.bst} />
