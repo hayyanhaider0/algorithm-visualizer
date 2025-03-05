@@ -9,7 +9,10 @@ const Output = ({
   value3,
   index3,
   error,
+  type,
 }) => {
+  const index = type === "tree" ? "Depth" : "Index";
+
   return (
     <section className="flex flex-col bg-zinc-950">
       <div className="bg-primary py-4 text-center">
@@ -22,14 +25,18 @@ const Output = ({
         <div>
           <h4>{heading1} Result</h4>
           <p>Value: {value1}</p>
-          <p>Index: {index1}</p>
+          <p>
+            {index}: {index1}
+          </p>
         </div>
 
         {/* Peek Result */}
         <div>
           <h4>{heading2} Result</h4>
           <p>Value: {value2}</p>
-          <p>Index: {index2}</p>
+          <p>
+            {index}: {index2}
+          </p>
         </div>
 
         {/* Pop/Dequeue/ExtractRoot Result */}
@@ -37,7 +44,9 @@ const Output = ({
           <div>
             <h4>{heading3} Result</h4>
             <p>Value: {value3}</p>
-            <p>Index: {index3}</p>
+            <p>
+              {index}: {index3}
+            </p>
           </div>
         )}
 

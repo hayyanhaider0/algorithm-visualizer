@@ -8,13 +8,13 @@ import com.example.backend.model.SearchResult;
 import com.example.backend.model.TreeNode;
 
 public class BSTService {
-    private TreeNode top;
+    private TreeNode root;
     private int childrenSize;
     private int size;
     private int id;
 
     public BSTService() {
-        top = null;
+        root = null;
         childrenSize = 2;
         size = 0;
         id = 0;
@@ -24,11 +24,11 @@ public class BSTService {
         TreeNode newNode = new TreeNode(id++, data, childrenSize);
 
         if (isEmpty()) {
-            top = newNode;
+            root = newNode;
             return true;
         }
 
-        TreeNode current = top;
+        TreeNode current = root;
         TreeNode parent = null;
 
         while (current != null) {
@@ -58,19 +58,19 @@ public class BSTService {
         if (isEmpty())
             return null;
 
-        TreeNode current = top;
+        TreeNode current = root;
         int depth = 0;
 
         while (current != null) {
-            if (data.compareTo(current.getChildren()[0].getData()) < 0) {
-                current = current.getChildren()[0];
-            } else if (data.compareTo(current.getChildren()[1].getData()) > 0) {
-                current = current.getChildren()[1];
-            } else {
+            current.setDepth(depth); // Set the depth of the current node
+            if (data.compareTo(current.getData()) == 0) {
                 return new SearchResult(data, depth);
+            } else if (data.compareTo(current.getData()) < 0) {
+                current = current.getChildren()[0]; // Go left
+            } else {
+                current = current.getChildren()[1]; // Go right
             }
-
-            depth++;
+            depth++; // Increment depth for the next node
         }
 
         return null;
@@ -81,7 +81,7 @@ public class BSTService {
             return false;
 
         TreeNode parent = null;
-        TreeNode current = top;
+        TreeNode current = root;
         boolean isLeftChild = false;
 
         // Find the node to delete
@@ -101,8 +101,8 @@ public class BSTService {
 
         // Case 1: Node has no children (leaf node)
         if (current.getChildren()[0] == null && current.getChildren()[1] == null) {
-            if (current == top) {
-                top = null;
+            if (current == root) {
+                root = null;
             } else if (parent != null) {
                 if (isLeftChild) {
                     parent.getChildren()[0] = null;
@@ -113,8 +113,8 @@ public class BSTService {
         }
         // Case 2: Node has one child
         else if (current.getChildren()[0] == null) { // Only right child
-            if (current == top) {
-                top = current.getChildren()[1];
+            if (current == root) {
+                root = current.getChildren()[1];
             } else if (parent != null) {
                 if (isLeftChild) {
                     parent.getChildren()[0] = current.getChildren()[1];
@@ -123,8 +123,8 @@ public class BSTService {
                 }
             }
         } else if (current.getChildren()[1] == null) { // Only left child
-            if (current == top) {
-                top = current.getChildren()[0];
+            if (current == root) {
+                root = current.getChildren()[0];
             } else if (parent != null) {
                 if (isLeftChild) {
                     parent.getChildren()[0] = current.getChildren()[0];
@@ -136,14 +136,15 @@ public class BSTService {
         // Case 3: Node has two children
         else {
             TreeNode successor = getSuccessor(current);
-            if (current == top) {
-                top = successor;
+            if (current == root) {
+                root = successor;
             } else if (parent != null) {
                 if (isLeftChild) {
                     parent.getChildren()[0] = successor;
                 } else {
                     parent.getChildren()[1] = successor;
                 }
+                successor.setDepth(parent.getDepth() + 1);
             }
             successor.getChildren()[0] = current.getChildren()[0];
         }
@@ -172,48 +173,23 @@ public class BSTService {
     public String peek() {
         if (isEmpty())
             return null;
-        return top.getData();
+        return root.getData();
     }
 
     public boolean clear() {
         if (isEmpty())
             return false;
-        top = null;
+        root = null;
         id = 0;
         size = 0;
         return true;
     }
 
-    public TreeNode[] getTree() {
-        List<TreeNode> nodeList = new ArrayList<>();
-        Stack<TreeNode> stack = new Stack<>();
-        TreeNode current = top;
-
-        while (current != null || !stack.isEmpty()) {
-            while (current != null) {
-                stack.push(current);
-                current = current.getChildren()[0];
-            }
-            current = stack.pop();
-
-            int[] childrenId = new int[2];
-
-            if (current.getChildren()[0] != null) {
-                childrenId[0] = current.getChildren()[0].getId();
-            }
-
-            if (current.getChildren()[1] != null) {
-                childrenId[1] = current.getChildren()[1].getId();
-            }
-
-            nodeList.add(new TreeNode(current.getId(), current.getData(), childrenId));
-            current = current.getChildren()[1];
-        }
-
-        return nodeList.toArray(new TreeNode[0]);
+    public TreeNode getRoot() {
+        return root;
     }
 
     public boolean isEmpty() {
-        return top == null;
+        return root == null;
     }
 }

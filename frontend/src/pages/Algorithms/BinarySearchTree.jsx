@@ -15,12 +15,12 @@ const BinarySearchTree = () => {
 
   const fetchupdatedTree = async () => {
     try {
-      const response = await fetch(`${BST_API}/list`);
-      if (!response.ok) throw new Error("Failed to fetch list");
+      const response = await fetch(`${BST_API}/tree`);
+      if (!response.ok) throw new Error("Failed to fetch tree");
       const updatedTree = await response.json();
       dispatch({ type: ACTIONS.UPDATE_TREE, payload: updatedTree });
     } catch (error) {
-      console.error("Error fetching linked list:", error);
+      console.error("Error fetching binary search tree:", error);
     }
   };
 
@@ -59,36 +59,49 @@ const BinarySearchTree = () => {
 
     try {
       const res = await fetch(url, { method });
-
-      if (!res.ok) {
-        const errorMessage = await res.clone().text();
-        console.error("Error", errorMessage);
-        return;
-      }
-
       const data = await res.json();
-      console.log(data);
 
-      // After performing the operation, always fetch the updated list
-      const updatedTreeRes = await fetch(`${BST_API}/list`);
+      // After performing the operation, always fetch the updated tree
+      const updatedTreeRes = await fetch(`${BST_API}/tree`);
       const updatedTree = await updatedTreeRes.json();
-      console.log(updatedTree);
 
       if (res.ok) {
         dispatch({ type: actionType, payload: data });
         dispatch({ type: ACTIONS.UPDATE_TREE, payload: updatedTree });
       }
     } catch (error) {
-      console.error("Error handling linked list operation", error);
+      console.error("Error handling binary search tree operation", error);
     }
   };
+
+  const convertToTreeNode = (node) => {
+    // If the input is null or undefined, return null
+    if (!node) return null;
+
+    // Create the current node object
+    return {
+      value: node.data, // Use 'data' as the node's value
+      id: node.id, // Optionally preserve the original ID
+      depth: node.depth,
+      left:
+        node.children && node.children[0]
+          ? convertToTreeNode(node.children[0])
+          : null,
+      right:
+        node.children && node.children[1]
+          ? convertToTreeNode(node.children[1])
+          : null,
+    };
+  };
+
+  const root = convertToTreeNode(state.tree);
 
   return (
     <div>
       <div className="bg-primary p-4 text-center">
         <h1>Binary Search Tree</h1>
       </div>
-      <TreeVisualizer root={state.tree === null ? null : state.tree.root} />
+      <TreeVisualizer root={root} />
       <div className="grid lg:grid-cols-2">
         <Input
           btn1Text="Add"
@@ -102,10 +115,11 @@ const BinarySearchTree = () => {
           heading1="Search"
           heading2="Peek"
           value1={state.searchResult ? state.searchResult.value : "null"}
-          index1={state.searchResult ? state.searchResult.searchIndex : "null"}
+          index1={state.searchResult ? state.searchResult.depth : "null"}
           value2={state.peekResult ? state.peekResult : "null"}
           index2={state.peekResult ? "root" : "null"}
           error={state.error}
+          type="tree"
         />
         <Description description={descriptions.bst.paragraphs} />
         <Code snippets={snippets.bst} />

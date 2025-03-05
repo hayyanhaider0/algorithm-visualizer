@@ -12,21 +12,15 @@ public class TreeNode {
     @JsonProperty
     private String data;
 
-    private TreeNode[] children;
+    @JsonProperty
+    private int depth;
 
     @JsonProperty
-    private int[] childrenId;
+    private TreeNode[] children;
 
     public TreeNode(int id, String value, int childrenSize) {
         this.id = id;
         this.data = value;
         this.children = new TreeNode[childrenSize];
-        this.childrenId = new int[childrenSize];
-    }
-
-    public TreeNode(int id, String data, int[] childrenId) {
-        this.id = id;
-        this.data = data;
-        this.childrenId = childrenId;
     }
 }

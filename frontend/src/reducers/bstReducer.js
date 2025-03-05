@@ -15,7 +15,7 @@ const ACTIONS = {
 };
 
 const bstReducer = (state, action) => {
-  const resetOutput = { searchResult: null, peekResult: null };
+  const resetOutput = { searchResult: null, peekResult: null, error: null };
 
   switch (action.type) {
     case ACTIONS.ADD:
@@ -38,7 +38,7 @@ const bstReducer = (state, action) => {
         ...state,
         searchResult: {
           value: action.payload.value,
-          depth: action.payload.depth,
+          depth: action.payload.index,
         },
       };
     case ACTIONS.PEEK:
@@ -70,6 +70,9 @@ const bstReducer = (state, action) => {
       }
       return { ...state, ...resetOutput };
     case ACTIONS.UPDATE_TREE:
+      if (action.payload.root) {
+        return { ...state, tree: null };
+      }
       return { ...state, tree: action.payload };
     default:
       return state;
