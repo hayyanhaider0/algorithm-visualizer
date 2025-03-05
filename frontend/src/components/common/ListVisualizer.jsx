@@ -20,10 +20,10 @@ const ListVisualizer = ({ type, structure }) => {
               className="relative flex gap-1 rounded-lg border-2 bg-secondary p-1"
               initial={{ x: -50, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              exit={{ x: 50, opacity: 0 }}
+              exit={{ scale: 0, opacity: 0 }}
               transition={{
                 type: "spring",
-                duration: 0.5,
+                duration: 0.4,
               }}
             >
               <p className="text-primary">{index}</p>
