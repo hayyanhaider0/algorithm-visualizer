@@ -1,9 +1,5 @@
 package com.example.backend.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
-
 import com.example.backend.model.SearchResult;
 import com.example.backend.model.TreeNode;
 
@@ -21,6 +17,9 @@ public class BSTService {
     }
 
     public boolean insert(String data) {
+        if (size == 100)
+            return false;
+
         TreeNode newNode = new TreeNode(id++, data, childrenSize);
 
         if (isEmpty()) {

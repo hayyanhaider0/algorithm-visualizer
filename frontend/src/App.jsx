@@ -4,7 +4,7 @@ import {
   Routes,
   useLocation,
 } from "react-router";
-import MainLayout from "./components/MainLayout";
+import MainLayout from "./components/common/MainLayout";
 import Home from "./pages/Home";
 import Algorithms from "./pages/Algorithms";
 

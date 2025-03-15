@@ -17,8 +17,6 @@ import com.example.backend.model.SearchResult;
 import com.example.backend.model.TreeNode;
 import com.example.backend.service.BSTService;
 
-import io.micrometer.core.ipc.http.HttpSender.Response;
-
 @RestController
 @RequestMapping("/api/bst")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -31,7 +29,7 @@ public class BSTController {
         Map<String, String> response = new HashMap<>();
 
         if (!result) {
-            response.put("error", value + " is a duplicate value");
+            response.put("error", value + " is a duplicate value/size exceeds 100 nodes");
             return ResponseEntity.ok(response);
         }
 
@@ -66,13 +64,15 @@ public class BSTController {
     @GetMapping("/peek")
     public ResponseEntity<?> peek() {
         String result = bstService.peek();
+        Map<String, String> response = new HashMap<>();
+
         if (result == null) {
-            Map<String, String> response = new HashMap<>();
             response.put("error", "The binary search tree is empty");
             return ResponseEntity.ok(response);
         }
 
-        return ResponseEntity.ok(result);
+        response.put("result", result);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/clear")

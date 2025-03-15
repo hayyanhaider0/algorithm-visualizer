@@ -5,6 +5,7 @@ const Input = ({
   btn2Text,
   btn3Text,
   btn4Text,
+  btn5Text,
   handleActions,
   ACTIONS,
 }) => {
@@ -54,6 +55,11 @@ const Input = ({
 
   const handleClear = () => {
     handleActions(ACTIONS.CLEAR);
+    setError(false);
+  };
+
+  const handleExtract = () => {
+    handleActions(ACTIONS.EXTRACT);
     setError(false);
   };
 
@@ -115,6 +121,17 @@ const Input = ({
         >
           Clear
         </button>
+
+        {/* Extract button */}
+        {btn5Text && (
+          <button
+            type="button"
+            onClick={handleExtract}
+            className="col-span-full hover:border-red-500 hover:text-red-500"
+          >
+            Extract
+          </button>
+        )}
       </form>
     </section>
   );
