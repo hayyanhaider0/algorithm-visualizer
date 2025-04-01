@@ -16,7 +16,7 @@ const ListVisualizer = ({ type, structure }) => {
         <AnimatePresence>
           {structure.map((node, index) => (
             <motion.div
-              key={node.id}
+              key={type === "heap" ? index : node.id}
               className="relative flex gap-1 rounded-lg border-2 bg-secondary p-1"
               initial={{ x: -50, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
@@ -28,9 +28,11 @@ const ListVisualizer = ({ type, structure }) => {
             >
               <p className="text-primary">{index}</p>
               <p className="rounded-md border-2 bg-primary p-2 text-xl">
-                {node.value}
+                {type === "heap" ? node : node.value}
               </p>
-              <p className="pt-1 text-3xl text-primary">→</p>
+              {type !== "heap" && (
+                <p className="pt-1 text-3xl text-primary">→</p>
+              )}
             </motion.div>
           ))}
         </AnimatePresence>

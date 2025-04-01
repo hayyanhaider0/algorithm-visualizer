@@ -51,7 +51,7 @@ const bstReducer = (state, action) => {
       }
       return {
         ...state,
-        peekResult: action.payload,
+        peekResult: action.payload.result,
       };
     case ACTIONS.DELETE:
       if (action.payload.error) {

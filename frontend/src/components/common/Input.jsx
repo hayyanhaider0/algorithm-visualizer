@@ -5,8 +5,10 @@ const Input = ({
   btn2Text,
   btn3Text,
   btn4Text,
+  btn5Text,
   handleActions,
   ACTIONS,
+  type,
 }) => {
   const [inputValue, setInputValue] = useState("");
   const [error, setError] = useState(false);
@@ -57,6 +59,11 @@ const Input = ({
     setError(false);
   };
 
+  const handleExtract = () => {
+    handleActions(ACTIONS.EXTRACT);
+    setError(false);
+  };
+
   return (
     <section>
       <div className="bg-primary py-4 text-center">
@@ -66,6 +73,7 @@ const Input = ({
       {/* Input box */}
       <form onSubmit={handleAdd} className="grid grid-cols-4 gap-4 p-4">
         <input
+          type={type === "tree" ? "number" : "text"}
           ref={inputRef}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
@@ -115,6 +123,17 @@ const Input = ({
         >
           Clear
         </button>
+
+        {/* Extract button */}
+        {btn5Text && (
+          <button
+            type="button"
+            onClick={handleExtract}
+            className="col-span-full hover:border-red-500 hover:text-red-500"
+          >
+            Extract
+          </button>
+        )}
       </form>
     </section>
   );

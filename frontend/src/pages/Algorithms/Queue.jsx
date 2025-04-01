@@ -19,7 +19,7 @@ const Queue = () => {
 
   const fetchUpdatedQueue = async () => {
     try {
-      const response = await fetch(`${LINKED_LIST_API}/queue`);
+      const response = await fetch(`${QUEUE_API}/queue`);
       if (!response.ok) throw new Error("Failed to fetch queue");
       const updatedList = await response.json();
       dispatch({ type: ACTIONS.UPDATE_QUEUE, payload: updatedQueue });
