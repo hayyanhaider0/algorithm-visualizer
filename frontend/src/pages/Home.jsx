@@ -1,6 +1,6 @@
 const Home = () => {
   return (
-    <div className="gridded-background flex min-h-[75vh] flex-col gap-8 px-8 py-16 text-center">
+    <div className="gridded-background flex min-h-[75vh] flex-col items-center justify-center gap-8 px-8 py-16 text-center">
       <div className="flex flex-col gap-8">
         <h1>Algorithm Visualizer</h1>
         <p className="text-lg md:text-xl">

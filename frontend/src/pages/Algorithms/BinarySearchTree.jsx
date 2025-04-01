@@ -65,6 +65,8 @@ const BinarySearchTree = () => {
       const updatedTreeRes = await fetch(`${BST_API}/tree`);
       const updatedTree = await updatedTreeRes.json();
 
+      console.log(data);
+
       if (res.ok) {
         dispatch({ type: actionType, payload: data });
         dispatch({ type: ACTIONS.UPDATE_TREE, payload: updatedTree });
@@ -80,7 +82,7 @@ const BinarySearchTree = () => {
 
     // Create the current node object
     return {
-      value: node.data, // Use 'data' as the node's value
+      value: node.value, // Use 'data' as the node's value
       id: node.id, // Optionally preserve the original ID
       depth: node.depth,
       left:
@@ -110,6 +112,7 @@ const BinarySearchTree = () => {
           btn4Text="Peek"
           handleActions={handleActions}
           ACTIONS={ACTIONS}
+          type="tree"
         />
         <Output
           heading1="Search"

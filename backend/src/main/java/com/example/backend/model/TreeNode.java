@@ -1,26 +1,28 @@
 package com.example.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 
 @Data
 public class TreeNode {
-    @JsonProperty
+    @JsonProperty("id")
     private int id;
 
-    @JsonProperty
-    private String data;
+    @JsonProperty("value")
+    private int value;
 
-    @JsonProperty
+    @JsonProperty("depth")
     private int depth;
 
-    @JsonProperty
+    @JsonProperty("children")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private TreeNode[] children;
 
-    public TreeNode(int id, String value, int childrenSize) {
+    public TreeNode(int id, int value, int childrenSize) {
         this.id = id;
-        this.data = value;
+        this.value = value;
         this.children = new TreeNode[childrenSize];
     }
 }
