@@ -19,7 +19,7 @@ const Stack = () => {
 
   const fetchUpdatedStack = async () => {
     try {
-      const response = await fetch(`${LINKED_LIST_API}/stack`);
+      const response = await fetch(`${STACK_API}/stack`);
       if (!response.ok) throw new Error("Failed to fetch stack");
       const updatedList = await response.json();
       dispatch({ type: ACTIONS.UPDATE_STACK, payload: updatedStack });

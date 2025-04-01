@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,13 +18,12 @@ import com.example.backend.service.BSTService;
 
 @RestController
 @RequestMapping("/api/bst")
-@CrossOrigin(origins = "http://localhost:5173")
 public class BSTController {
     private final BSTService bstService = new BSTService();
 
     @PostMapping("/insert")
     public ResponseEntity<?> insert(@RequestParam String value) {
-        boolean result = bstService.insert(value);
+        boolean result = bstService.insert(Integer.parseInt(value));
         Map<String, String> response = new HashMap<>();
 
         if (!result) {
@@ -38,7 +36,7 @@ public class BSTController {
 
     @GetMapping("/search")
     public ResponseEntity<?> search(@RequestParam String value) {
-        SearchResult result = bstService.search(value);
+        SearchResult result = bstService.search(Integer.parseInt(value));
 
         if (result == null) {
             Map<String, Object> response = new HashMap<>();
@@ -51,7 +49,7 @@ public class BSTController {
 
     @DeleteMapping("/delete/{value}")
     public ResponseEntity<?> delete(@PathVariable String value) {
-        boolean result = bstService.delete(value);
+        boolean result = bstService.delete(Integer.parseInt(value));
         Map<String, String> response = new HashMap<>();
         if (!result) {
             response.put("error", "Value " + value + " not found");
@@ -63,14 +61,15 @@ public class BSTController {
 
     @GetMapping("/peek")
     public ResponseEntity<?> peek() {
-        String result = bstService.peek();
-        Map<String, String> response = new HashMap<>();
+        Integer result = bstService.peek();
 
         if (result == null) {
+            Map<String, String> response = new HashMap<>();
             response.put("error", "The binary search tree is empty");
             return ResponseEntity.ok(response);
         }
 
+        Map<String, Integer> response = new HashMap<>();
         response.put("result", result);
         return ResponseEntity.ok(response);
     }

@@ -18,8 +18,8 @@ public class BinaryHeapService {
     }
 
     // Insert a new value into the heap.
-    public boolean insert(String data) {
-        TreeNode newNode = new TreeNode(id++, data, childrenSize);
+    public boolean insert(int value) {
+        TreeNode newNode = new TreeNode(id++, value, childrenSize);
         if (root == null) {
             root = newNode;
         } else {
@@ -87,33 +87,33 @@ public class BinaryHeapService {
         return null;
     }
 
-    // Swap the data of two nodes.
+    // Swap the value of two nodes.
     private void swap(TreeNode node1, TreeNode node2) {
-        String temp = node1.getData();
-        node1.setData(node2.getData());
-        node2.setData(temp);
+        int temp = node1.getValue();
+        node1.setValue(node2.getValue());
+        node2.setValue(temp);
     }
 
     // Determine if a swap is needed (min-heap: parent's value should be <=
     // child's).
     private boolean shouldSwap(TreeNode child, TreeNode parent) {
         return isMinHeap
-                ? child.getData().compareTo(parent.getData()) < 0
-                : child.getData().compareTo(parent.getData()) > 0;
+                ? child.getValue() < parent.getValue()
+                : child.getValue() > parent.getValue();
     }
 
     // Peek the root value.
-    public String peek() {
+    public Integer peek() {
         if (isEmpty())
             return null;
-        return root.getData();
+        return root.getValue();
     }
 
     // Delete a node with the given value from the heap.
-    public boolean delete(String data) {
+    public boolean delete(int value) {
         if (root == null)
             return false;
-        TreeNode nodeToDelete = findNode(root, data);
+        TreeNode nodeToDelete = findNode(root, value);
         if (nodeToDelete == null)
             return false;
         TreeNode lastNode = getLastNode();
@@ -130,27 +130,27 @@ public class BinaryHeapService {
     }
 
     // Find a node by value using a recursive search.
-    private TreeNode findNode(TreeNode node, String data) {
+    private TreeNode findNode(TreeNode node, int value) {
         if (node == null)
             return null;
-        if (node.getData().equals(data))
+        if (node.getValue() == value)
             return node;
-        TreeNode leftResult = findNode(node.getChildren()[0], data);
+        TreeNode leftResult = findNode(node.getChildren()[0], value);
         if (leftResult != null)
             return leftResult;
-        return findNode(node.getChildren()[1], data);
+        return findNode(node.getChildren()[1], value);
     }
 
     // Extract the root value from the heap.
-    public String extractRoot() {
+    public Integer extractRoot() {
         if (root == null)
             return null;
-        String result = root.getData();
+        int result = root.getValue();
         TreeNode lastNode = getLastNode();
         if (lastNode == root) {
             root = null;
         } else {
-            root.setData(lastNode.getData());
+            root.setValue(lastNode.getValue());
             removeLastNode();
             heapifyDown(root);
         }
@@ -220,16 +220,16 @@ public class BinaryHeapService {
         return root;
     }
 
-    // Return the heap as an array (level-order) of data values.
+    // Return the heap as an array (level-order) of value values.
     public String[] toArray() {
         if (root == null)
             return new String[0];
         Queue<TreeNode> queue = new LinkedList<>();
         queue.add(root);
-        LinkedList<String> list = new LinkedList<>();
+        LinkedList<Integer> list = new LinkedList<>();
         while (!queue.isEmpty()) {
             TreeNode current = queue.poll();
-            list.add(current.getData());
+            list.add(current.getValue());
             if (current.getChildren()[0] != null)
                 queue.add(current.getChildren()[0]);
             if (current.getChildren()[1] != null)

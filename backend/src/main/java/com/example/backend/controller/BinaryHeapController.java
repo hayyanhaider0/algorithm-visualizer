@@ -3,7 +3,6 @@ package com.example.backend.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +11,6 @@ import com.example.backend.service.BinaryHeapService;
 
 @RestController
 @RequestMapping("/api/heap")
-@CrossOrigin(origins = "http://localhost:5173")
 public class BinaryHeapController {
 
     private final BinaryHeapService heapService = new BinaryHeapService(true); // Default as min-heap
@@ -20,7 +18,7 @@ public class BinaryHeapController {
     // Insert a value into the heap
     @PostMapping("/insert")
     public ResponseEntity<?> insert(@RequestParam String value) {
-        boolean result = heapService.insert(value);
+        boolean result = heapService.insert(Integer.parseInt(value));
         Map<String, String> response = new HashMap<>();
 
         if (!result) {
@@ -35,14 +33,15 @@ public class BinaryHeapController {
     // Peek at the root of the heap
     @GetMapping("/peek")
     public ResponseEntity<?> peek() {
-        String result = heapService.peek();
-        Map<String, String> response = new HashMap<>();
+        Integer result = heapService.peek();
 
         if (result == null) {
+            Map<String, String> response = new HashMap<>();
             response.put("error", "Heap is empty");
             return ResponseEntity.ok(response);
         }
 
+        Map<String, Integer> response = new HashMap<>();
         response.put("result", result);
         return ResponseEntity.ok(response);
     }
@@ -50,7 +49,7 @@ public class BinaryHeapController {
     // Delete a specific value from the heap
     @DeleteMapping("/delete/{value}")
     public ResponseEntity<?> delete(@PathVariable String value) {
-        boolean result = heapService.delete(value);
+        boolean result = heapService.delete(Integer.parseInt(value));
         Map<String, String> response = new HashMap<>();
 
         if (!result) {
@@ -64,14 +63,15 @@ public class BinaryHeapController {
 
     @GetMapping("/extract")
     public ResponseEntity<?> extractRoot() {
-        String extractedValue = heapService.extractRoot();
-        Map<String, String> response = new HashMap<>();
+        Integer extractedValue = heapService.extractRoot();
 
         if (extractedValue == null) {
+            Map<String, String> response = new HashMap<>();
             response.put("error", "Heap is empty");
             return ResponseEntity.ok(response);
         }
 
+        Map<String, Integer> response = new HashMap<>();
         response.put("result", extractedValue);
         return ResponseEntity.ok(response);
     }
