@@ -22,6 +22,8 @@ public class BackendApplication {
                         .allowedOrigins("*")
                         .allowedMethods("*")
                         .allowedHeaders("*");
+                System.out.println("CORS configuration loaded");
+
             }
         };
     }
